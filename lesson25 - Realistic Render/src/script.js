@@ -25,7 +25,7 @@ const scene = new THREE.Scene()
 const updateAllMaterials = () => {
     scene.traverse( (child) => {
         if(child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial){
-            child.material.envMap = environmentMap
+            // child.material.envMap = environmentMap
             child.material.envMapIntensity = debugObject.envMapIntensity
         }
     })
@@ -41,7 +41,10 @@ const environmentMap = cubeTextureLoader.load([
     '/textures/environmentMaps/0/nz.jpg'
 ])
 
+environmentMap.encoding = THREE.sRGBEncoding
 scene.background = environmentMap
+// apply environment to models
+scene.environment = environmentMap
 
 debugObject.envMapIntensity = 3
 gui.add(debugObject, 'envMapIntensity').min(0).max(10).step(0.001).onChange(updateAllMaterials)
@@ -115,6 +118,18 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 renderer.physicallyCorrectLights = true
+renderer.outputEncoding = THREE.sRGBEncoding
+renderer.toneMapping = THREE.ReinhardToneMapping
+
+gui.add(renderer, 'toneMapping', {
+    No: THREE.NoToneMapping,
+    Linear: THREE.LinearToneMapping,
+    Reinhard: THREE.ReinhardToneMapping,
+    Cineon: THREE.CineonToneMapping,
+    ACESFilmic: THREE.ACESFilmicToneMapping
+})
+
+console.log(THREE.ACESFilmicToneMapping)
 
 /**
  * Animate
