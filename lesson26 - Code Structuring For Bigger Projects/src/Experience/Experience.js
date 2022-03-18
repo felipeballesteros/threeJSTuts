@@ -1,7 +1,22 @@
-import Sizes from "../Utils/Sizes"
+import * as THREE from 'three'
 
+import Sizes from "../Utils/Sizes"
+import Time from '../Utils/Time'
+import Camera from './Camera'
+import Renderer from './Renderer'
+import World from './World/World'
+
+
+let instance = null
 export default class Experience {
     constructor( canvas ) {
+
+
+        // The next two lines allow for creation of singleton
+        if(instance) return instance
+
+        instance = this
+
         // Global Access
         window.experience = this
 
@@ -10,10 +25,31 @@ export default class Experience {
   
         // Setup
         this.sizes = new Sizes()
+        this.time = new Time()
+        this.scene = new THREE.Scene()
+        this.camera = new Camera()
+        this.renderer = new Renderer()
+        this.world = new World()
 
-        // Listen to resize
+        // Event Listener to resize
         this.sizes.on('resize', () => {
-            console.log('I heard a resize')
+            this.resize()
+        })
+
+        // Time tick event
+        this.time.on('tick', () => {
+            this.update()
         })
     }
+
+    resize() {
+        this.camera.resize()
+        this.renderer.resize()
+    }
+
+    update() {
+        this.camera.update()
+        this.renderer.update()
+    }
 }
+
