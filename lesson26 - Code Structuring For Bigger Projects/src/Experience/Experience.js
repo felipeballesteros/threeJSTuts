@@ -6,6 +6,7 @@ import Camera from './Camera'
 import Renderer from './Renderer'
 import World from './World/World'
 import Resources from '../Utils/Resources'
+import Debug from '../Utils/Debug'
 import sources from './sources'
 
 
@@ -25,6 +26,7 @@ export default class Experience {
         this.canvas = canvas
   
         // Setup
+        this.debug = new Debug()
         this.sizes = new Sizes()
         this.time = new Time()
         this.scene = new THREE.Scene()
@@ -51,6 +53,7 @@ export default class Experience {
 
     update() {
         this.camera.update()
+        this.world.update()
         this.renderer.update()
     }
 }
