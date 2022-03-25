@@ -46,7 +46,7 @@ export default class Fox{
     this.animation.actions.current = this.animation.actions.idle
     this.animation.actions.current.play()
 
-    this.animation.play = (name) =>{
+    this.animation.play = (name) => {
       const newAction = this.animation.actions[name]
       const oldAction = this.animation.actions.current
 
@@ -55,6 +55,19 @@ export default class Fox{
       newAction.crossFadeFrom(oldAction, 1)
 
       this.animation.actions.current = newAction
+    }
+
+    // Debug
+    if(this.debug.active) {
+
+      const debugObject = {
+        playIdle: () => { this.animation.play('idle') },
+        playWalking: () => { this.animation.play('walking') },
+        playRunning: () => { this.animation.play('running') }
+      }
+      this.debugFolder.add(debugObject, 'playIdle')
+      this.debugFolder.add(debugObject, 'playWalking')
+      this.debugFolder.add(debugObject, 'playRunning')
     }
   }
 
