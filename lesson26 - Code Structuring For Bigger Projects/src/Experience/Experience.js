@@ -12,10 +12,10 @@ import sources from './sources'
 
 let instance = null
 export default class Experience {
-    constructor( canvas ) {
+    constructor(canvas) {
 
         // The next two lines allow for creation of singleton
-        if(instance) return instance
+        if (instance) return instance
 
         instance = this
 
@@ -24,7 +24,7 @@ export default class Experience {
 
         // Options
         this.canvas = canvas
-  
+
         // Setup
         this.debug = new Debug()
         this.sizes = new Sizes()
@@ -57,9 +57,35 @@ export default class Experience {
         this.renderer.update()
     }
 
-    destroy(){
+    destroy() {
         this.sizes.off('resize')
         this.time.off('tick')
+
+        // traverse the whole scene
+        this.scene.traverse(child => {
+
+            // Test if it's a mesh
+            if (child instanceof THREE.Mesh) {
+                child.geometry.dispose()
+
+                // Loop through the material properties
+                for (const key in child.material) {
+                    const value = child.material[key]
+
+                    // Test if there is a dispose function
+                    if (value && typeof value.dispose === 'function') {
+                        value.dispose()
+                    }
+                }
+            }
+        })
+
+        this.camera.controls.dispose()
+        this.renderer.instance.dispose()
+
+        if (this.degug){
+            this.debug.ui.destroy()
+        }
     }
 }
 
