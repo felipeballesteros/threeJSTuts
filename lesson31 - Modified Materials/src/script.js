@@ -72,6 +72,17 @@ const material = new THREE.MeshStandardMaterial( {
     normalMap: normalTexture
 })
 
+material.onBeforeCompile = (shader) => {
+    shader.vertexShader = shader.vertexShader.replace(
+        '#include <begin_vertex>', 
+        `
+        #include <begin_vertex>
+        
+        float angle = 0.3; 
+        `
+    )
+}
+
 /**
  * Models
  */
