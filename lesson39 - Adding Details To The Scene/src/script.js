@@ -79,23 +79,31 @@ gltfLoader.load(
 const firefliesGeometry = new THREE.BufferGeometry()
 const firefliesCount = 30
 const positionArray = new Float32Array(firefliesCount * 3)
+const scaleArray = new Float32Array(firefliesCount)
 
 for (let i = 0; i < firefliesCount; i++) {
     positionArray[i * 3 + 0] = (Math.random() - 0.5) * 4
     positionArray[i * 3 + 1] = Math.random() * 1.5
     positionArray[i * 3 + 2] = (Math.random() - 0.5) * 4
+
+    scaleArray[i] = Math.random()
 }
 
 firefliesGeometry.setAttribute('position', new THREE.BufferAttribute(positionArray, 3))
+firefliesGeometry.setAttribute('aScale', new THREE.BufferAttribute(scaleArray, 1))
 
 // Material
 const firefliesMaterial = new THREE.ShaderMaterial({
-    uniform: {
-        uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) }
+    uniforms: {
+        uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+        uSize: { value: 100 }
     },
     vertexShader: firefliesVertexShader,
-    fragmentShader: firefliesFragmentShader
+    fragmentShader: firefliesFragmentShader,
+    transparent: true
 })
+
+gui.add(firefliesMaterial.uniforms.uSize, 'value').min(0).max(500).step(1).name('firefliesSize')
 
 // Points
 const fireflies = new THREE.Points(firefliesGeometry, firefliesMaterial)
@@ -123,6 +131,9 @@ window.addEventListener('resize', () =>
     // Update renderer
     renderer.setSize(sizes.width, sizes.height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+    // Update fireflies
+    firefliesMaterial.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio, 2)
 })
 
 /**
