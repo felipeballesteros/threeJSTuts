@@ -9,8 +9,6 @@ import firefliesFragmentShader from './shaders/fireflies/fragment.glsl'
 import portalVertexShader from './shaders/portal/vertex.glsl'
 import portalFragmentShader from './shaders/portal/fragment.glsl'
 
-console.log(portalVertexShader)
-console.log(portalFragmentShader)
 
 /**
  * Base
@@ -56,6 +54,9 @@ const poleLightMaterial = new THREE.MeshBasicMaterial({color: 0xffffe5 })
 
 // Portal light material
 const portalLightMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+        uTime: { value: 0 }
+    },
     vertexShader: portalVertexShader,
     fragmentShader: portalFragmentShader
 })
@@ -102,7 +103,11 @@ firefliesGeometry.setAttribute('aScale', new THREE.BufferAttribute(scaleArray, 1
 // Material
 const firefliesMaterial = new THREE.ShaderMaterial({
     uniforms: {
-        uTime: { value: 0 },
+        uTime: { 
+            value: 0,
+            uColorStart: { value: new THREE.Color(0xff0000) },
+            uColorEnd: { value: new THREE.Color(0x0000ff) }
+        },
         uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
         uSize: { value: 100 }
     },
@@ -191,6 +196,7 @@ const tick = () =>
 
     // Update materials
     firefliesMaterial.uniforms.uTime.value = elapsedTime
+    portalLightMaterial.uniforms.uTime.value = elapsedTime
 
     // Update controls
     controls.update()
