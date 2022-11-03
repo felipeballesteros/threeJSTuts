@@ -3,11 +3,15 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
 import * as CANNON from 'cannon-es'
+import CannonDebugger from 'cannon-es-debugger'
+
 /**
  * Debug
  */
 const gui = new dat.GUI()
-const debugObject = {}
+const debugObject = {
+    showPhysics: true
+}
 debugObject.createSphere = () => {
     createSphere(
         Math.random() * 0.5,
@@ -46,6 +50,8 @@ debugObject.reset = () => {
 }
 
 gui.add(debugObject,'reset')
+
+gui.add(debugObject, 'showPhysics' ) 
 
 /**
  * Base
@@ -185,6 +191,16 @@ const sizes = {
     width: window.innerWidth,
     height: window.innerHeight
 }
+
+
+const cannonDebugger = new CannonDebugger(scene, world, {
+   // color: 0x000000,
+    onUpdate(body, mesh){
+        console.log(debugObject.showPhysics)
+        mesh.visible = !!debugObject.showPhysics
+    }
+})
+
 
 window.addEventListener('resize', () =>
 {
@@ -329,6 +345,9 @@ const tick = () =>
 
     // Update controls
     controls.update()
+
+    // Update debugger
+    cannonDebugger.update()
 
     // Render
     renderer.render(scene, camera)
