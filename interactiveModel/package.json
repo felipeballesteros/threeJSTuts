@@ -1,0 +1,27 @@
+{
+  "name": "interactivemodel",
+  "version": "1.0.0",
+  "description": "Simple model interactivity, controls",
+  "main": "index.html",
+  "scripts": {
+    "build": "rollup --config -w"
+  },
+  "keywords": [
+    "threejs",
+    "interactive",
+    "3dmodel"
+  ],
+  "author": "Felipe Ballesteros",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^23.0.2",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "rollup": "^3.2.5",
+    "rollup-plugin-livereload": "^2.0.5",
+    "rollup-plugin-serve": "^2.0.1"
+  },
+  "dependencies": {
+    "three": "^0.146.0"
+  }
+}
