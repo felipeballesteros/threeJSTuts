@@ -1,7 +1,7 @@
 import livereload from 'rollup-plugin-livereload'
 import serve from 'rollup-plugin-serve'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
-import commonjs from '@rollup/plugin-commonjs';
+import commonjs from '@rollup/plugin-commonjs'
 
 export default {
   entry: 'main.js',

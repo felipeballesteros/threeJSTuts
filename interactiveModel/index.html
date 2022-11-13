@@ -9,6 +9,11 @@
       content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
 
+
+    <!-- Following tutorial at:
+    https://tympanus.net/codrops/2019/10/14/how-to-create-an-interactive-3d-character-with-three-js/
+    -->
+
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" type="text/css" href="src/styles.css" />
     <title>Character Tutorial</title>
@@ -17,10 +22,10 @@
   <body>
 
     <!-- The loading element overlays all else until the model is loaded, at which point we remove this element from the DOM -->
-    <!-- <div class="loading" id="js-loader"><div class="loader"></div></div> -->
+    <div class="loading" id="js-loader"><div class="loader"></div></div>
     <div class="wrapper">
       <!-- The canvas element is used to draw the 3D scene -->
-      <canvas id="c"></canvas>
+      <canvas id="canvasElement"></canvas>
     </div>
 
     <script src="./dist/bundle.js"></script>
