@@ -30,10 +30,11 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
       renderer = new THREE.WebGLRenderer({ 
         canvas, 
         antialias: true,
-        shadowMap: { enabled: true },
+        setPixelRatio: window.devicePixelRatio,
       })
 
-      renderer.setPixelRatio(window.devicePixelRatio)
+      renderer.shadowMap.enabled = true
+
       document.body.appendChild(renderer.domElement)
 
 
@@ -72,6 +73,14 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
               o.receiveShadow = true
               o.material = stacy_mtl
             }
+
+            // Reference the neck and waist bones
+            if (o.isBone && o.name === 'mixamorigNeck'){
+              neck = o
+            }
+            if (o.isBone && o.name === 'mixamorigSpine'){
+              waist = o
+            }
           })
 
           // set the models initial scale
@@ -83,6 +92,10 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
           // Animations
           mixer = new THREE.AnimationMixer(model)
           let idleAnim = THREE.AnimationClip.findByName(fileAnimations, 'idle')
+
+          idleAnim.tracks.splice(3, 3)
+          idleAnim.tracks.splice(9, 3)
+
           idle = mixer.clipAction(idleAnim)
           idle.play()
         },
@@ -134,7 +147,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
       
       scene.add(floor)
 
-      // Circle
+      // Circle in the background
       let geometry = new THREE.SphereGeometry(8, 32, 32)
       let material = new THREE.MeshBasicMaterial({ color: 0xf2ce2e }) // 0xf2ce2e 
       let sphere = new THREE.Mesh(geometry, material)
@@ -174,7 +187,76 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
       requestAnimationFrame(update)
     }
 
+
+
+    // Start execution here
     init()
     update()
+
+    document.addEventListener('mousemove', e => {
+      let mouseCoords = getMousePos(e)
+      if (neck && waist){
+        moveJoint(mouseCoords, neck, 50)
+        moveJoint(mouseCoords, waist, 30)
+      }
+    })
+
+    const getMousePos = e => {
+      return {
+        x: e.clientX,
+        y: e.clientY
+      }
+    }
+
+    const moveJoint = (mouse, joint, degreeLimit) => {
+      let degrees = getMouseDegrees(mouse.x, mouse.y, degreeLimit)
+      joint.rotation.y = THREE.MathUtils.degToRad(degrees.x)
+      joint.rotation.x = THREE.MathUtils.degToRad(degrees.y)
+    }
+
+    const getMouseDegrees = (x, y, degreeLimit) => {
+      let dx = 0,
+          dy = 0,
+          xdiff,
+          xPercentage,
+          ydiff,
+          yPercentage
+
+      let w = { x: window.innerWidth, y: window.innerHeight }
+
+      // Left (Rotates neck left between 0 and -degreeLimit)
+      // 1. If cursor is on the left half of the screen
+      if( x <= w.x / 2) {
+        // 2. Get the difference between middle of screen and cursor position
+        xdiff = w.x / 2 - x
+        // 3. Find the percentage of that difference (percentage toward edge on the screen)
+        xPercentage = (xdiff / (w.x / 2)) * 100
+        // 4. Convert that to a percentage of the maximum rotation we allow for the neck
+        dx = ((degreeLimit * xPercentage) / 100) * -1
+      }
+
+      // Right (Rotates neck right between 0 and degreeLimit)
+      if (x >= w.x / 2) {
+        xdiff = x - w.x / 2;
+        xPercentage = (xdiff / (w.x / 2)) * 100;
+        dx = (degreeLimit * xPercentage) / 100;
+      }
+
+      // Up (Rotates neck up between 0 and -degreeLimit)
+      if (y <= w.y / 2) {
+        ydiff = w.y / 2 - y
+        yPercentage = (ydiff / (w.y / 2)) * 100
+        // Note that I cut degreeLimit in half when she looks up
+        dy = (((degreeLimit * 0.5) * yPercentage) / 100) * -1
+      }
+
+      // Down (Rotates neck down between 0 and degreeLimit)
+      if (y >= w.y / 2) {
+        ydiff = y - w.y / 2;
+        yPercentage = (ydiff / (w.y / 2)) * 100;
+        dy = (degreeLimit * yPercentage) / 100;
+      }
+      return { x: dx, y: dy }
+    }
 
   })()
