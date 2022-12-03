@@ -64,7 +64,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
       loader.load(
         MODEL_PATH,
         (gltf) => {
-          const model = gltf.scene
+          model = gltf.scene
           let fileAnimations = gltf.animations
 
           model.traverse( o => {
@@ -91,7 +91,16 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
           // Animations
           mixer = new THREE.AnimationMixer(model)
+          let clips = fileAnimations.filter(val => val.name !== 'idle');
           let idleAnim = THREE.AnimationClip.findByName(fileAnimations, 'idle')
+
+          possibleAnims = clips.map(val => {
+            let clip = THREE.AnimationClip.findByName(clips, val.name)
+            clip.tracks.splice(3, 3)
+            clip.tracks.splice(9, 3)
+            clip = mixer.clipAction(clip)
+            return clip
+          })
 
           idleAnim.tracks.splice(3, 3)
           idleAnim.tracks.splice(9, 3)
@@ -257,6 +266,55 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
         dy = (degreeLimit * yPercentage) / 100;
       }
       return { x: dx, y: dy }
+    }
+
+    window.addEventListener('click', e => raycast(e))
+    window.addEventListener('touchend', e => raycast(e, true))
+
+    const playModifierAnimation = (from, fSpeed, to, tSpeed) => {
+      to.setLoop(THREE.LoopOnce)
+      to.reset()
+      to.play()
+      from.crossFadeTo(to, fSpeed, true)
+
+      setTimeout( () => {
+        from.enabled = true
+        to.crossFadeTo(from, tSpeed, true)
+        currentlyAnimating = false
+      }, to._clip.duration * 1000 - ((tSpeed + fSpeed) * 1000 ) )
+    }
+
+    const playOnClick = () => {
+      let anim = Math.floor(Math.random() * possibleAnims.length) + 0
+      playModifierAnimation(idle, 0.25, possibleAnims[anim], 0.25)
+    }
+
+    function raycast(e, touch = false) {
+      let mouse = {}
+      if (touch) {
+        mouse.x = 2 * (e.changedTouches[0].clientX / window.innerWidth) - 1
+        mouse.y = 1 - 2 * (e.changedTouches[0].clientY / window.innerHeight)
+      } else {
+        mouse.x = 2 * (e.clientX / window.innerWidth) - 1
+        mouse.y = 1 - 2 * (e.clientY / window.innerHeight)
+      }
+      // update the picking ray with the camera and mouse position
+      raycaster.setFromCamera(mouse, camera)
+
+      // calculate objects intersecting the picking ray
+      let intersects = raycaster.intersectObjects(scene.children, true)
+
+      if (intersects[0]) {
+        let object = intersects[0].object
+
+        if (object.name === 'stacy') {
+
+          if (!currentlyAnimating) {
+            currentlyAnimating = true
+            playOnClick()
+          }
+        }
+      }
     }
 
   })()
