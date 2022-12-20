@@ -1,7 +1,7 @@
 import Clicker from "./Clicker"
 import { useState } from 'react'
 
-export default function App({ children }){
+export default function App({ clickersCount, children }){
 
   const [ hasClicker, setHasClicker ] = useState(true)
   const [ count, setCount] = useState(0)
@@ -21,9 +21,14 @@ export default function App({ children }){
       <button onClick={ toggleClickerClick }>{ hasClicker ? 'Hide' : 'Show' } Clicker</button>
       { hasClicker &&
         <>
-          <Clicker increment={ increment } keyName='countA' color='red'/>
-          <Clicker increment={ increment } keyName='countB' color='green'/>
-          <Clicker increment={ increment } keyName='countC' color='yellow'/>
+          {[...Array(clickersCount)].map( (value, index) => 
+            <Clicker
+              key={ index }
+              increment={ increment } 
+              keyName={`count${index}`} 
+              color='red'
+            />
+          )}
         </>
       }
     </>
