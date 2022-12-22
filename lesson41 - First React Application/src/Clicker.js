@@ -1,12 +1,17 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 export default function Clicker({ increment, keyName, color = 'white'}) {
 
   const [count, setCount] = useState(parseInt(localStorage.getItem(keyName) ?? 0))
+  const buttonRef = useRef()
 
   // First Time Render
   useEffect(() => {
     //console.log('component created')
+
+    //update buttonRef after first pass
+    buttonRef.current.style.backgroundColor = 'papayawhip'
+    buttonRef.current.style.color = 'salmon'
 
     // Function executed when component is being destroyed
     return () => {
@@ -28,7 +33,7 @@ export default function Clicker({ increment, keyName, color = 'white'}) {
   return(
     <div>
       <div style={{color}}>Click Count: {count}</div>
-      <button onClick={ buttonClick }>Click Me</button>
+      <button ref={ buttonRef } onClick={ buttonClick }>Click Me</button>
     </div>
   ) 
 }
