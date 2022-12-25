@@ -1,5 +1,6 @@
 import Clicker from "./Clicker"
 import { useState, useMemo } from 'react'
+import People from "./People"
 
 export default function App({ clickersCount, children }){
 
@@ -30,7 +31,7 @@ export default function App({ clickersCount, children }){
   return (
     <>
       { children }
-      <div>Total Count: {count }</div> <br />
+      <div>Total Count: { count }</div> <br />
       <button onClick={ toggleClickerClick }>{ hasClicker ? 'Hide' : 'Show' } Clicker</button>
       { hasClicker &&
         <>
@@ -44,6 +45,8 @@ export default function App({ clickersCount, children }){
           )}
         </>
       }
+
+      <People />
     </>
   )
 }
