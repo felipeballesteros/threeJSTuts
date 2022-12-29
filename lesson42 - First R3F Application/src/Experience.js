@@ -1,6 +1,7 @@
 import { useFrame, extend, useThree } from "@react-three/fiber"
 import { useRef } from "react"
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import CustomObject from './CustomObject'
 
 extend({ OrbitControls })
 
@@ -22,20 +23,22 @@ export default function Experience() {
     <directionalLight position= { [1, 2 ,3] } intensity={ 1.5 } />
     <ambientLight intensity={ 0.5 } />
 
-    <mesh position-x={1} ref={cubeRef}>
+    <mesh position-x={2} ref={cubeRef}>
         <boxGeometry scale={ 1.5 } />
         <meshStandardMaterial color={'mediumPurple'} />
     </mesh>
 
-    <mesh position-x={-1}>
+    <mesh position-x={-2}>
         <sphereGeometry args={ [1, 20, 20] } />
         <meshStandardMaterial color={'orange'} />
     </mesh>
 
     <mesh rotation-x={Math.PI * -0.5} position-y={-1}>
-        <planeGeometry args={ [4,4] } />
+        <planeGeometry args={ [6,6] } />
         <meshStandardMaterial color={'greenyellow'} />
     </mesh>
+
+    <CustomObject />
   </>
   )
 }
