@@ -14,6 +14,12 @@ export default function Experience() {
 
   useFrame( ( state, delta ) => {
     cubeRef.current.rotation.y += delta
+
+    // Animation for camera rotation
+    // const angle = state.clock.elapsedTime
+    // state.camera.position.x = Math.sin(angle) * 6
+    // state.camera.position.z = Math.cos(angle) * 6
+    // state.camera.lookAt(0, 0, 0)
   })
 
   return (
