@@ -1,5 +1,6 @@
-import { Float, Text, Html, PivotControls, TransformControls, OrbitControls } from '@react-three/drei'
+import { MeshReflectorMaterial, Float, Text, Html, PivotControls, TransformControls, OrbitControls } from '@react-three/drei'
 import { useRef } from 'react'
+import { MeshStandardMaterial } from 'three'
 
 export default function Experience(){
 
@@ -18,7 +19,7 @@ export default function Experience(){
             lineWidth={4}
             axisColors={['#9381ff', '#ff4d6d', '#7ae582']}
             scale={100}
-            fixed={true} // fixes size on screen regarding of zoom level
+            fixed={true}
         >
             <mesh position-x={ - 2 } ref={sphere}>
                 <sphereGeometry/>
@@ -28,7 +29,7 @@ export default function Experience(){
                     wrapperClass='label'
                     center
                     distanceFactor={8}
-                    occlude={[cube, sphere]} //Hide HTML if these are in front
+                    occlude={[cube, sphere]}
                 >
                     That is a sphere 🤘
                 </Html>
@@ -43,7 +44,13 @@ export default function Experience(){
 
         <mesh position-y={ - 1 } rotation-x={ - Math.PI * 0.5 } scale={ 10 }>
             <planeGeometry />
-            <meshStandardMaterial color="greenyellow" />
+            <MeshReflectorMaterial
+                color='rgb(18, 169, 83)'
+                resolution={512}
+                blur={ [1000, 1000 ]}
+                mixBlur={1}
+                mirror={0.75}
+            />
         </mesh>
 
         <Float>
