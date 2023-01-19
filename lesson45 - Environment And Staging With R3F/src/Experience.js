@@ -1,8 +1,16 @@
 import { useFrame } from '@react-three/fiber'
-import { OrbitControls, useHelper } from '@react-three/drei'
+import { softShadows, OrbitControls, useHelper } from '@react-three/drei'
 import { useRef } from 'react'
 import { Perf } from 'r3f-perf'
 import * as THREE from 'three'
+
+softShadows({
+    frustum: 3.75,
+    size: 0.005,
+    near: 9.5,
+    samples: 17,
+    rings: 11
+})
 
 export default function Experience()
 {
@@ -27,6 +35,7 @@ export default function Experience()
             intensity={ 1.5 } 
             ref={directionalLight}
             castShadow
+            softShadows
             shadow-mapSize={ [ 1024, 1024 ] }
             shadow-camera-near={ 1 }
             shadow-camera-far={ 10 }
