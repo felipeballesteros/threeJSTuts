@@ -1,27 +1,30 @@
 import { useFrame } from '@react-three/fiber'
-import { softShadows, OrbitControls, useHelper } from '@react-three/drei'
+import { RandomizedLight, AccumulativeShadows, softShadows, OrbitControls, useHelper } from '@react-three/drei'
 import { useRef } from 'react'
 import { Perf } from 'r3f-perf'
 import * as THREE from 'three'
 
-softShadows({
-    frustum: 3.75,
-    size: 0.005,
-    near: 9.5,
-    samples: 17,
-    rings: 11
-})
+// softShadows({
+//     frustum: 3.75,
+//     size: 0.005,
+//     near: 9.5,
+//     samples: 17,
+//     rings: 11
+// })
 
 export default function Experience()
 {
     const directionalLight = useRef()
-    useHelper(directionalLight, THREE.DirectionalLightHelper, 1)
+    // useHelper(directionalLight, THREE.DirectionalLightHelper, 1)
 
     const cube = useRef()
     
     useFrame((state, delta) =>
     {
+        const time = state.clock.elapsedTime
         cube.current.rotation.y += delta * 0.2
+        cube.current.position.x = 2 + Math.sin(time)
+
     })
 
     return <>
@@ -29,6 +32,26 @@ export default function Experience()
         <Perf position="top-left" />
 
         <OrbitControls makeDefault />
+
+        <AccumulativeShadows
+            position={[ 0, -0.99, 0 ]}
+            scale={10}
+            color='#316d39'
+            opacity={ 0.8 }
+            frames={ Infinity }
+            blend={ 100 }
+            temporal
+        >
+            <RandomizedLight 
+                amount={ 8 }
+                radius={ 1 }
+                ambient={ 0.5 }
+                intensity={ 0.7 }
+                bias={ 0.001 }
+                position={[ 1, 2, 3 ]}
+            />
+
+        </AccumulativeShadows>
 
         <directionalLight
             position={ [ 1, 2, 3 ] } 
@@ -56,7 +79,7 @@ export default function Experience()
             <meshStandardMaterial color="mediumpurple" />
         </mesh>
 
-        <mesh receiveShadow position-y={ - 1 } rotation-x={ - Math.PI * 0.5 } scale={ 10 }>
+        <mesh position-y={ - 1 } rotation-x={ - Math.PI * 0.5 } scale={ 10 }>
             <planeGeometry />
             <meshStandardMaterial color="greenyellow" />
         </mesh>
