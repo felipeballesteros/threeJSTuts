@@ -5,6 +5,7 @@ import {
     AccumulativeShadows,
     softShadows,
     OrbitControls,
+    Sky,
     useHelper 
 } from '@react-three/drei'
 import { useRef } from 'react'
@@ -40,6 +41,10 @@ export default function Experience()
         }
     )
 
+    const { sunPosition } = useControls('sky', {
+        sunPosition: { value: [1, 2, 3] }
+    })
+
     return <>
         <color args={['gray']} attach='background'/>
         <Perf position="top-left" />
@@ -74,10 +79,11 @@ export default function Experience()
             color={ color }
             opacity={ opacity }
             blur={ blur }
+            frames={ 1 }
         />
 
         <directionalLight
-            position={ [ 1, 2, 3 ] } 
+            position={sunPosition } 
             intensity={ 1.5 } 
             ref={directionalLight}
             castShadow
@@ -91,6 +97,8 @@ export default function Experience()
             shadow-camera-left={ - 5 }
         />
         <ambientLight intensity={ 0.5 } />
+
+        <Sky sunPosition={sunPosition}/>
 
         <mesh castShadow position-x={ - 2 }>
             <sphereGeometry />
