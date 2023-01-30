@@ -7,7 +7,8 @@ import {
     OrbitControls,
     Sky,
     Environment,
-    useHelper 
+    useHelper,
+    Lightformer
 } from '@react-three/drei'
 import { useRef } from 'react'
 import { Perf } from 'r3f-perf'
@@ -52,11 +53,15 @@ export default function Experience()
 
     return <>
 
-        <Environment 
-            background
-            files={'environmentMaps/the_sky_is_on_fire_2k.hdr'}
+        <Environment background >
+            <color args={[ "#000" ]} attach="background" />
+            <Lightformer position-z={ -5 } scale={ 10 } color="red" intensity={ 2 } form="ring" /> 
+            {/* <mesh position-z={ -5 } scale={ 10 }>
+                <planeGeometry />
+                <meshBasicMaterial color={ [5,0,0] } />
+            </mesh> */}
+        </Environment>
 
-        />
         
         <color args={['gray']} attach='background'/>
         
