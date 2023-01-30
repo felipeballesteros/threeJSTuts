@@ -53,9 +53,9 @@ export default function Experience()
 
     return <>
 
-        <Environment background >
+        <Environment background preset="sunset">
             <color args={[ "#000" ]} attach="background" />
-            <Lightformer position-z={ -5 } scale={ 10 } color="red" intensity={ 2 } form="ring" /> 
+            {/* <Lightformer position-z={ -5 } scale={ 10 } color="red" intensity={ 2 } form="ring" />  */}
             {/* <mesh position-z={ -5 } scale={ 10 }>
                 <planeGeometry />
                 <meshBasicMaterial color={ [5,0,0] } />
