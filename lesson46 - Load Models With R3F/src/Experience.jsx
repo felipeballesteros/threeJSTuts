@@ -3,6 +3,7 @@ import { Perf } from 'r3f-perf'
 import { Suspense } from 'react'
 import PlaceHolder from './PlaceHolder'
 import Hamburger from './Hamburger'
+import Fox from './Fox'
 
 export default function Experience()
 {
@@ -25,6 +26,8 @@ export default function Experience()
         >
             <Hamburger scale={0.35}/>
         </Suspense>
+
+        <Fox />
 
     </>
 }
