@@ -26,5 +26,10 @@ export default function Experience(){
                 <meshMatcapMaterial matcap={ matcapTexture} />
             </Text3D>
         </Center>
+
+        <mesh>
+            <torusGeometry args={ [ 1, 0.6, 16, 32 ] }/>
+            <meshMatcapMaterial matcap={ matcapTexture } />
+        </mesh>
     </>
 }
