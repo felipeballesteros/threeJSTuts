@@ -6,6 +6,9 @@ export default function Experience(){
     const [matcapTexture] = useMatcapTexture('7B5254_E9DCC7_B19986_C8AC91', 256)
 
     const [ torusGeometry, setTorusGeometry ] = useState()
+    const [ material, setMaterial ] = useState()
+
+
 
     return <>
 
@@ -15,8 +18,11 @@ export default function Experience(){
 
         <torusGeometry ref={ setTorusGeometry } args={ [ 1, 0.6, 16, 32 ] }/>
 
+        <meshMatcapMaterial ref={ setMaterial } matcap={ matcapTexture} />
+
         <Center>
-            <Text3D 
+            <Text3D
+                material= { material }
                 font='./fonts/helvetiker_regular.typeface.json'
                 size={ 0.75 }
                 height={ 0.2 }
@@ -28,7 +34,6 @@ export default function Experience(){
                 bevelSegments={ 5 }
             >
                 HELLO R3F
-                <meshMatcapMaterial matcap={ matcapTexture} />
             </Text3D>
         </Center>
 
@@ -36,6 +41,7 @@ export default function Experience(){
             <mesh
                 key={index}
                 geometry= { torusGeometry }
+                material= { material }
                 position={[
                     (Math.random() - 0.5) * 10,
                     (Math.random() - 0.5) * 10,
@@ -49,10 +55,7 @@ export default function Experience(){
                     Math.random() * Math.PI,
                     0
                 ]}
-            >
-                
-                <meshMatcapMaterial matcap={ matcapTexture } />
-            </mesh>
+            />
         )}
 
     </>
