@@ -1,4 +1,4 @@
-import { Center, OrbitControls, useGLTF, useTexture } from '@react-three/drei'
+import { Center, OrbitControls, useGLTF, useTexture, Sparkles } from '@react-three/drei'
 
 export default function Experience(){
 
@@ -40,7 +40,16 @@ export default function Experience(){
                 position={ nodes.portalLight.position }
                 rotation={ nodes.portalLight.rotation }
             >
+                <shaderMaterial />
             </mesh>
+
+            <Sparkles 
+                size={ 6 }
+                scale={ [4, 2, 4 ]}
+                position-y={ 1 }
+                speed={ 0.2 }
+                count={ 40 }
+            />
         </Center>
 
     </>
