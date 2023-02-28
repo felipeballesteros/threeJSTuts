@@ -1,12 +1,12 @@
 import { useFrame } from '@react-three/fiber'
-import { OrbitControls, useGLTF } from '@react-three/drei'
+import { OrbitControls, useGLTF, meshBounds } from '@react-three/drei'
 import { useRef } from 'react'
 
 export default function Experience()
 {
     const cube = useRef()
     const hamburguer = useGLTF('./hamburger.glb')
-    
+
     useFrame((state, delta) =>
     {
         cube.current.rotation.y += delta * 0.2
@@ -29,7 +29,8 @@ export default function Experience()
         </mesh>
 
         <mesh 
-            ref={ cube } 
+            ref={ cube }
+            raycast={ meshBounds }
             position-x={ 2 } scale={ 1.5 } 
             onClick={eventHandler}
             onPointerEnter={ () => { document.body.style.cursor= 'pointer' } }
