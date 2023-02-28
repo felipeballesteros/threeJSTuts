@@ -1,10 +1,11 @@
 import { useFrame } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
+import { OrbitControls, useGLTF } from '@react-three/drei'
 import { useRef } from 'react'
 
 export default function Experience()
 {
     const cube = useRef()
+    const hamburguer = useGLTF('./hamburger.glb')
     
     useFrame((state, delta) =>
     {
@@ -42,6 +43,17 @@ export default function Experience()
             <planeGeometry />
             <meshStandardMaterial color="greenyellow" />
         </mesh>
+
+        <primitive
+            object={ hamburguer.scene }
+            scale={ 0.25 }
+            position-y={ 0.5 }
+            onClick={ event => {
+                console.log(event.object.name)
+                // Only trigger once, on the item clicked
+                event.stopPropagation()
+            }}
+        />
 
     </>
 }
