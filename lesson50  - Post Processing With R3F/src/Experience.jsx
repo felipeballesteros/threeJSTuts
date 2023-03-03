@@ -1,14 +1,20 @@
 import { OrbitControls } from '@react-three/drei'
 import { Vignette, EffectComposer } from '@react-three/postprocessing'
 import { Perf } from 'r3f-perf'
+import { BlendFunction } from 'postprocessing'
+
 
 export default function Experience()
 {
     return <>
+
+        <color args={ ['#ffffff'] } attach="background" />
+    
         <EffectComposer>
             <Vignette
                 offset={ 0.3 }
                 darkness={ 0.9 }
+                blendFunction={ BlendFunction.NORMAL}
             />
         </EffectComposer>
 
