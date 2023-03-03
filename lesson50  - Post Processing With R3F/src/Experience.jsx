@@ -1,5 +1,5 @@
 import { OrbitControls } from '@react-three/drei'
-import { Vignette, EffectComposer, Glitch } from '@react-three/postprocessing'
+import { Vignette, EffectComposer, Glitch, Noise } from '@react-three/postprocessing'
 import { Perf } from 'r3f-perf'
 import { BlendFunction, GlitchMode } from 'postprocessing'
 
@@ -16,11 +16,17 @@ export default function Experience()
                 blendFunction={ BlendFunction.NORMAL}
             /> */}
 
-            <Glitch 
+            {/* <Glitch 
                 delay={ [0.5, 1]}
                 duration={ [ 0.2, 0.4 ]}
                 mode={ GlitchMode.SPORADIC }
+            /> */}
+
+            <Noise
+                premultiply
+                blendFunction={BlendFunction.SOFT_LIGHT}
             />
+
         </EffectComposer>
 
         <Perf position="top-left" />
