@@ -41,6 +41,11 @@ export default function Experience(){
     //     ior: { value: 1.45, min: 0, max: 2 }
     //   })
 
+    const drunkProps = useControls('Drunk Effect', {
+        frequency: {value: 2, min: 1, max: 20 },
+        amplitude: {value: 0.1, min: 0, max: 1 }
+    })
+
     return <>
 
         <color args={ ['#ffffff'] } attach="background" />
@@ -75,8 +80,8 @@ export default function Experience(){
 
             <Drunk
                 ref={ drunkRef }
-                frequency={ 20 }
-                amplitude={ 0.1 }
+                { ...drunkProps }
+                blendFunction={ BlendFunction.DARKEN }
             />
 
         </EffectComposer>
