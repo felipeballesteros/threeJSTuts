@@ -1,4 +1,4 @@
-import { Environment, useGLTF, OrbitControls } from '@react-three/drei'
+import { Float, Environment, useGLTF, OrbitControls } from '@react-three/drei'
 
 export default function Experience()
 {
@@ -13,12 +13,12 @@ export default function Experience()
 
         <OrbitControls makeDefault />
         
-        <mesh>
-            <boxGeometry />
-            <meshNormalMaterial />
-        </mesh>
-
-        <primitive object={ computer.scene } />
+        <Float rotationIntensity={0.4}>
+            <primitive
+                position-y={ -1.2 }
+                object={ computer.scene } 
+            />
+        </Float>
 
     </>
 }
