@@ -1,7 +1,7 @@
 import { OrbitControls, useGLTF } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
-import { CuboidCollider, Debug, RigidBody, Physics, CylinderCollider } from '@react-three/rapier'
-import { useRef, useState } from 'react'
+import { CuboidCollider, Debug, RigidBody, Physics, CylinderCollider, InstancedRigidBodies } from '@react-three/rapier'
+import { useRef, useState, useEffect, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
@@ -10,9 +10,51 @@ export default function Experience(){
     const [ hitSound ] = useState( () => new Audio('./hit.mp3'))
     const hamburguer = useGLTF('./hamburger.glb')
 
+    const cubeCount = 100
+    const cubes = useRef()
+
 
     const cube = useRef()
     const twister = useRef()
+
+    const cubeTransforms = useMemo( () => {
+        const positions = []
+        const rotations = []
+        const scales = []
+
+        for ( let i = 0; i < cubeCount; i++ ){
+           positions.push( [
+                ( Math.random() - 0.5 ) * 8,
+                6 + i * 0.2,        
+                ( Math.random() - 0.5 ) * 8           
+            ] ),
+           rotations.push( [
+                Math.random(),
+                Math.random(),
+                Math.random()
+           ])
+           const scale = 0.2 + Math.random() * 0.8
+           scales.push( [scale, scale, scale])
+        }
+
+        return {
+            positions,
+            rotations,
+            scales 
+        }
+    }, [])
+
+    // useEffect( () => {
+    //     for(let i = 0; i < cubeCount; i++){
+    //         const matrix = new THREE.Matrix4()
+    //         matrix.compose(
+    //             new THREE.Vector3( i * 2, 0, 0),
+    //             new THREE.Quaternion(),
+    //             new THREE.Vector3(1,1,1)
+    //         )
+    //         cubes.current.setMatrixAt(i, matrix)
+    //     }
+    // }, [])
 
     const cubeJump = () => {
         const mass = cube.current.mass()
@@ -57,7 +99,7 @@ export default function Experience(){
 
         <Physics gravity={ [ 0, -9.81, 0]}>
 
-            <Debug/>
+            {/* <Debug/> */}
 
             {/* Ball */}
             <RigidBody colliders='ball'>
@@ -118,6 +160,17 @@ export default function Experience(){
                 <CuboidCollider args={ [ 0.5, 2, 5 ] } position={ [ 5.5, 1, 0 ] } />
                 <CuboidCollider args={ [ 0.5, 2, 5 ] } position={ [ - 5.5, 1, 0 ] } />
             </RigidBody>
+
+            <InstancedRigidBodies
+                positions = { cubeTransforms.positions }
+                rotations = { cubeTransforms.rotations }
+                scales = { cubeTransforms.scales }
+            >
+                <instancedMesh castShadow ref={ cubes } args={ [ null, null, cubeCount ] }>
+                    <boxGeometry />
+                    <meshStandardMaterial color='tomato' />
+                </instancedMesh>
+            </InstancedRigidBodies>
 
         </Physics>
 
