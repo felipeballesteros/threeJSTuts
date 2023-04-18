@@ -1,3 +1,4 @@
+import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { Debug, RigidBody } from '@react-three/rapier'
 import { useRef, useState } from 'react'
@@ -21,6 +22,28 @@ const BlockStart = ( { position = [ 0, 0, 0 ] }  ) => {
             scale={ [4, 0.2, 4] } 
             receiveShadow
         />
+    </group>
+}
+
+const BlockEnd = ( { position = [ 0, 0, 0 ] }  ) => {
+
+    const hamburger = useGLTF('./hamburger.glb')
+
+    return <group position={ position } >
+        <mesh 
+            geometry={ boxGeometry }
+            material={ floor1Material }
+            position={ [0, 0, 0] } 
+            scale={ [4, 0.2, 4] } 
+            receiveShadow
+        />
+
+        <RigidBody type='fixed'>
+            <primitive 
+                object={ hamburger.scene }
+                scale={ 0.2 }
+            />
+        </RigidBody>
     </group>
 }
 
@@ -69,12 +92,12 @@ const BlockSpinner = ( { position = [ 0, 0, 0 ] }  ) => {
 const BlockLimbo = ( { position = [ 0, 0, 0 ] }  ) => {
 
     const obstacle = useRef()
-    const [ speed ] = useState( () => (Math.random() + 0.2) * (Math.random() < 0.5 ? -1 : 1) )
+    const [ timeOffset ] = useState( () => Math.random() * Math.PI * 2 )
 
     useFrame( (state) => {
         const time = state.clock.getElapsedTime()
-        const y = Math.sin(time) + 1.15
-        obstacle.current.setNextKinematicTranslation({ x: 0, y: y, z: 0})
+        const y = Math.sin(time + timeOffset) + 1.15
+        obstacle.current.setNextKinematicTranslation({ x: position[0], y: position[1] + y, z: position[2]})
     })
 
     return <group position={ position } >
@@ -106,12 +129,53 @@ const BlockLimbo = ( { position = [ 0, 0, 0 ] }  ) => {
     </group>
 }
 
+const BlockAxe = ( { position = [ 0, 0, 0 ] }  ) => {
+
+    const obstacle = useRef()
+    const [ timeOffset ] = useState( () => Math.random() * Math.PI * 2 )
+
+    useFrame( (state) => {
+        const time = state.clock.getElapsedTime()
+        const x = Math.sin(time + timeOffset) * 1.25
+        obstacle.current.setNextKinematicTranslation({ x: position[0] + x, y: position[1] + 0.75, z: position[2]})
+    })
+
+    return <group position={ position } >
+        <mesh 
+            geometry={ boxGeometry }
+            material={ floor2Material }
+            position={ [0, -0.1, 0] } 
+            scale={ [4, 0.2, 4] } 
+            receiveShadow
+        />
+
+        <RigidBody 
+            type='kinematicPosition' 
+            position={ [0, 0.3, 0] } 
+            restitution={ 0.2 } // bounce rate
+            friction={ 0 }
+            ref={ obstacle }
+        >
+            <mesh 
+                geometry={ boxGeometry }
+                material={ obstacleMaterial }
+                scale={ [1.5, 1.3, 0.3] }
+                castShadow
+                receiveShadow
+            />
+        </RigidBody>
+
+    </group>
+}
+
 export default function Level( ) {
     return <>
         <Debug />
     
-        <BlockStart position={ [0, 0, 8] }/>
-        <BlockSpinner position={ [0, 0, 4] }/>
-        <BlockLimbo position={ [0, 0, 0] }/>
+        <BlockStart position={ [0, 0, 16] }/>
+        <BlockSpinner position={ [0, 0, 12] }/>
+        <BlockLimbo position={ [0, 0, 8] }/>
+        <BlockAxe position={ [0, 0, 4] }/>
+        <BlockEnd position={ [0, 0, 0] }/>
     </>
 }
