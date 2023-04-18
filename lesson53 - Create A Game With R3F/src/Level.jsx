@@ -29,6 +29,10 @@ const BlockEnd = ( { position = [ 0, 0, 0 ] }  ) => {
 
     const hamburger = useGLTF('./hamburger.glb')
 
+    hamburger.scene.children.forEach( mesh => {
+        mesh.castShadow = true
+    })
+
     return <group position={ position } >
         <mesh 
             geometry={ boxGeometry }
@@ -38,7 +42,15 @@ const BlockEnd = ( { position = [ 0, 0, 0 ] }  ) => {
             receiveShadow
         />
 
-        <RigidBody type='fixed'>
+        <RigidBody
+            type='fixed'
+            colliders='hull'
+            restitution={ 0.2 }
+            friction={ 0 }
+            position={ [ 0, 0.25, 0 ] }
+        >
+            {/* To cast shadow you have to target the meshes,
+            not the primitive, which is a group */}
             <primitive 
                 object={ hamburger.scene }
                 scale={ 0.2 }
