@@ -3,9 +3,9 @@ import { RigidBody, useRapier } from "@react-three/rapier"
 import { useKeyboardControls } from "@react-three/drei"
 import { useEffect, useRef, useState } from "react";
 import * as THREE from 'three'
+import useGame from "./stores/useGame";
 
 export default function Player() {
-
   const [subscribeKeys, getKeys] = useKeyboardControls()
   const body = useRef()
   const { rapier, world } = useRapier()
@@ -13,6 +13,11 @@ export default function Player() {
 
   const [ smoothedCameraPosition ] = useState(() => new THREE.Vector3(20, 20, 20))
   const [ smoothedCameraTarget ] = useState(() => new THREE.Vector3())
+
+  const start = useGame( state => state.start )
+  const end = useGame( state => state.end )
+  const blocksCount = useGame( state => state.blocksCount )
+  const restart = useGame( state => state.restart )
 
   const jump = () => {
     const origin = body.current.translation()
@@ -27,7 +32,6 @@ export default function Player() {
   }
 
   useEffect( () => {
-
     const unsubscribeJump = subscribeKeys(
       state => state.jump,
       value => {
@@ -35,8 +39,13 @@ export default function Player() {
       }
     )
 
+    const unsubscribeAny = subscribeKeys( () => {
+      start()
+    })
+
     return () => {
       unsubscribeJump()
+      unsubscribeAny()
     }
   }, [])
 
@@ -91,6 +100,18 @@ export default function Player() {
 
     state.camera.position.copy(smoothedCameraPosition)
     state.camera.lookAt(smoothedCameraTarget)
+
+    /*
+     * Phases
+     */
+
+    if(bodyPosition.z < - (blocksCount * 4 + 2)){
+      end()
+    }
+
+    if(bodyPosition.y < -4){
+      restart()
+    }
 
   })
 
