@@ -4,7 +4,8 @@ import { subscribeWithSelector } from 'zustand/middleware'
 export default create(
     subscribeWithSelector((set) => {
         return {
-            blocksCount: 3,
+            blocksCount: 10,
+            blockSeed: 0,
 
             // Time
             startTime: 0,
@@ -26,7 +27,10 @@ export default create(
             restart: () => {
                 set((state) => {
                     if (state.phase === 'playing' || state.phase === 'ended') {
-                        return { phase: 'ready' }
+                        return {
+                            phase: 'ready',
+                            blocksSeed: Math.random()
+                        }
                     }
                     return {}
                 })
