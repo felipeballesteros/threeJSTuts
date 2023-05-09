@@ -36,7 +36,7 @@ export default create(
                     if (state.phase === 'playing') {
                         return {
                             phase: 'ended',
-                            endTime: Date.now
+                            endTime: Date.now()
                         }
                     }
                     return {}
